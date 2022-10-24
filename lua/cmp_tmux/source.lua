@@ -5,6 +5,7 @@
 -- license: MIT
 --
 
+local cmp = require('cmp')
 local config = require('cmp.config')
 local Tmux = require('cmp_tmux.tmux')
 
@@ -50,6 +51,10 @@ end
 
 function source:complete(request, callback)
     local word = string.sub(request.context.cursor_before_line, request.offset)
+
+    if request.context:get_reason() ~= cmp.ContextReason.Manual then
+        return callback()
+    end
 
     self.tmux:complete(word, function(words)
         if words == nil then
